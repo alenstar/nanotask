@@ -28,6 +28,8 @@ build:
           go get github.com/zieckey/goini
           go get github.com/unrolled/render
           go get github.com/go-playground/log
+          go get github.com/go-playground/ansi
+          go get gopkg.in/go-playground/assert.v1
 
     # Build the project
     - script:
