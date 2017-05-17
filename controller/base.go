@@ -21,7 +21,7 @@ func init() {
 	DEBUG = true
 }
 
-type ControllerInterface interface {
+type IController interface {
 	Get()
 	Put()
 	Post()
@@ -48,10 +48,10 @@ func (b *BaseController) Init(ctx *context.Context) {
 	b.Render = render.New()
 }
 
-func Create(controller ControllerInterface) func(http.ResponseWriter, *http.Request) {
+func Create(controller IController) func(http.ResponseWriter, *http.Request) {
 	return func(rsp http.ResponseWriter, req *http.Request) {
 		vc := reflect.New(reflect.Indirect(reflect.ValueOf(controller)).Type())
-		execController, ok := vc.Interface().(ControllerInterface)
+		execController, ok := vc.Interface().(IController)
 		if !ok {
 			panic("controller is not IController")
 		}
