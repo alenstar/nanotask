@@ -19,6 +19,13 @@ func (s *Server) Handle(pattern string, handler func(http.ResponseWriter, *http.
 	s.mux.HandleFunc(pattern, handler)
 }
 
+func (s *Server) UseStaticDir(path, dir string) {
+	if s.mux == nil {
+		s.mux = http.NewServeMux()
+	}
+	s.mux.Handle(path, http.FileServer(http.Dir(dir)))
+}
+
 func (s *Server) Run() {
 	http.ListenAndServe(s.addr, s.mux)
 }

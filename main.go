@@ -17,6 +17,7 @@ func (m *MyController) Get() {
 func main() {
 	s := server.New(":8888")
 	log.Info("Http Server Start ... ... ", *s)
+	s.UseStaticDir("/", "admin/dist/")
 	s.Handle("/object", controller.Create(&MyController{}))
 	s.Run()
 }
