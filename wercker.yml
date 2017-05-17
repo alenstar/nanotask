@@ -58,6 +58,7 @@ deploy:
     - script:
         name: deploy to daocloud
         code: |
+          go build -v
           sshpass -p $DAOCLOUD_SSH_PASS ssh -o StrictHostKeyChecking=no $DAOCLOUD_SSH_URL "[ -f nanoweb ] && rm nanoweb "
           sshpass -p $DAOCLOUD_SSH_PASS scp -o stricthostkeychecking=no nanoweb $DAOCLOUD_SSH_RUL:/home/ubuntu
           sshpass -p $DAOCLOUD_SSH_PASS ssh -o StrictHostKeyChecking=no $DAOCLOUD_SSH_URL "NANOWEB_STATUS=`ps -A | grep nanoweb | wc -l` && [ $NANOWEB_STATUS -eq 1 ] && killall nanoweb && ./nanoweb&"
