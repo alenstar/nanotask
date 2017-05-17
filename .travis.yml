@@ -8,6 +8,8 @@ go:
 sudo: false
 
 install:
+  - apt install expect
+  - apt-get install sshpass
   - go get github.com/zieckey/goini
   - go get github.com/unrolled/render
   - go get github.com/go-playground/log
@@ -15,6 +17,10 @@ install:
   - go get gopkg.in/go-playground/assert.v1
   
 script:
-  - go test
+  - go test -v ./...
+  - go build -v 
+  - sshpass -p $DAOCLOUD_SSH_PASS ssh -o StrictHostKeyChecking=no $DAOCLOUD_SSH_URL "[ -f nanoweb ] && rm nanoweb "
+  - sshpass -p $DAOCLOUD_SSH_PASS scp -o stricthostkeychecking=no nanoweb $DAOCLOUD_SSH_RUL:/home/ubuntu
+  - sshpass -p $DAOCLOUD_SSH_PASS ssh -o StrictHostKeyChecking=no $DAOCLOUD_SSH_URL "NANOWEB_STATUS=`ps -A | grep nanoweb | wc -l` && [ $NANOWEB_STATUS -eq 1 ] && killall nanoweb && ./nanoweb&"
 
 

@@ -35,10 +35,32 @@ build:
     - script:
         name: go build
         code: |
-          go build ./...
+          go build -v ./...
 
     # Test the project
     - script:
         name: go test
         code: |
-          go test ./...
+          go test -v ./...
+
+deploy:
+  steps:
+    - script:
+        name: install sshpass
+        code: |
+          apt-get install sshpass
+          go get github.com/zieckey/goini
+          go get github.com/unrolled/render
+          go get github.com/go-playground/log
+          go get github.com/go-playground/ansi
+          go get gopkg.in/go-playground/assert.v1
+    - install-packages:
+        packages: git ssh-client liberror-perl sshpass
+    - script:
+        name: deploy to daocloud
+        code: |
+          sshpass -p $DAOCLOUD_SSH_PASS ssh -o StrictHostKeyChecking=no $DAOCLOUD_SSH_URL "[ -f nanoweb ] && rm nanoweb "
+          sshpass -p $DAOCLOUD_SSH_PASS scp -o stricthostkeychecking=no nanoweb $DAOCLOUD_SSH_RUL:/home/ubuntu
+          sshpass -p $DAOCLOUD_SSH_PASS ssh -o StrictHostKeyChecking=no $DAOCLOUD_SSH_URL "NANOWEB_STATUS=`ps -A | grep nanoweb | wc -l` && [ $NANOWEB_STATUS -eq 1 ] && killall nanoweb && ./nanoweb&"
+
+
