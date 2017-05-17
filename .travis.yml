@@ -8,7 +8,6 @@ go:
 sudo: false
 
 install:
-  - apt install expect
   - apt-get install sshpass
   - go get github.com/zieckey/goini
   - go get github.com/unrolled/render

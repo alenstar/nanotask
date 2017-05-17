@@ -48,7 +48,6 @@ deploy:
     - script:
         name: install sshpass
         code: |
-          apt-get install sshpass
           go get github.com/zieckey/goini
           go get github.com/unrolled/render
           go get github.com/go-playground/log
