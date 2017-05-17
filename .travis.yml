@@ -8,7 +8,7 @@ go:
 sudo: false
 
 install:
-    # - sudo apt-get install sshpass
+  - sudo apt-get install sshpass
   - go get github.com/zieckey/goini
   - go get github.com/unrolled/render
   - go get github.com/go-playground/log
