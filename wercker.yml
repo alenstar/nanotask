@@ -45,6 +45,7 @@ build:
 
 deploy:
   steps:
+    - setup-go-workspace
     - script:
         name: install sshpass
         code: |
