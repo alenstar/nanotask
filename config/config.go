@@ -76,6 +76,10 @@ func String(key string, def string) string {
 	return defaultConfig.String(key, def)
 }
 
+func StringN(key string) string {
+	return defaultConfig.String(key, "")
+}
+
 func Bool(key string) bool {
 	return defaultConfig.Bool(key)
 }
