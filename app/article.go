@@ -66,7 +66,7 @@ func (a *ArticleController) Get() {
 		}
 
 		var articleIds []uint64
-		results, _ := modules.DefaultEngine().Query(fmt.Sprintf("select article_id from db_test.tb_article_info where id > %d order by id limit 50", ainfo.Id)) //  limit 2;
+		results, _ := modules.DefaultEngine().Query(fmt.Sprintf("select article_id from tb_article_info where id > %d order by id limit 50", ainfo.Id)) //  limit 2;
 
 		for _, v := range results {
 			for k, vv := range v {
