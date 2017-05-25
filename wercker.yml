@@ -30,6 +30,7 @@ build:
           go get github.com/go-playground/log
           go get github.com/go-playground/ansi
           go get gopkg.in/go-playground/assert.v1
+          go get github.com/bitly/go-simplejson
 
     # Build the project
     - script:

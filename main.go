@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/alenstar/nanoweb/app"
 	_ "github.com/alenstar/nanoweb/config"
 	"github.com/alenstar/nanoweb/controller"
 	"github.com/alenstar/nanoweb/http/server"
@@ -21,5 +22,8 @@ func main() {
 	log.Info("Http Server Start ... ... ", *s)
 	s.UseStaticDir("/", "admin/dist/")
 	s.Handle("/object", controller.Create(&MyController{}))
+	s.Handle("/user", controller.Create(&app.UserController{}))
+	s.Handle("/article", controller.Create(&app.ArticleController{}))
+	s.Handle("/discuss", controller.Create(&app.DiscussController{}))
 	s.Run()
 }

@@ -5,9 +5,17 @@ import (
 	"github.com/alenstar/nanoweb/config"
 	"github.com/alenstar/nanoweb/log"
 	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/go-xorm/core"
+	"github.com/go-xorm/core"
 	"github.com/go-xorm/xorm"
 )
+
+type XormLogger struct {
+}
+
+func (x *XormLogger) Write(p []byte) (int, error) {
+	log.Info(string(p))
+	return len(p), nil
+}
 
 var engine *xorm.Engine
 
@@ -28,7 +36,17 @@ func init() {
 	if err != nil {
 		log.Error("xorm.NewEngine: ", err.Error())
 	} else {
+		engine.SetLogger(xorm.NewSimpleLogger(new(XormLogger)))
 		engine.ShowSQL(true)
+		engine.SetTableMapper(core.NewPrefixMapper(core.SnakeMapper{}, "tb_"))
+
 		log.Info(engine.DBMetas())
 	}
+}
+
+func DefaultEngine() *xorm.Engine {
+	if engine == nil {
+		panic("engine is nil")
+	}
+	return engine
 }

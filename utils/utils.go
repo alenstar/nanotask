@@ -1,11 +1,13 @@
 package utils
 
-
 import (
+	"crypto/md5"
 	"errors"
+	"io/ioutil"
+	"os"
 	"reflect"
-    "os"
-    "io/ioutil"
+	// "encoding/base64"
+	"encoding/hex"
 )
 
 func reflectCopy(dst, src reflect.Value) error {
@@ -32,7 +34,6 @@ func TernaryIf(condition bool, trueVal, falseVal interface{}) interface{} {
 	return falseVal
 }
 
-
 func FileLoad(filename string) []byte {
 	var file, err = os.OpenFile(filename, os.O_RDWR, 0644)
 	if err != nil {
@@ -47,4 +48,11 @@ func FileLoad(filename string) []byte {
 		return nil
 	}
 	return n
+}
+
+func Md5String(str string) string {
+	md5ctx := md5.New()
+	md5ctx.Write([]byte(str))
+	md5encode := md5ctx.Sum(nil)
+	return hex.EncodeToString(md5encode)
 }
