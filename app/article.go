@@ -98,7 +98,7 @@ func (a *ArticleController) Get() {
 }
 
 func (a *ArticleController) Post() {
-	log.Debug("Article Post")
+	log.Debug("Article Post", string(a.Ctx.CopyBody()))
 	ainfo := &ArticleInfo{}
 	err := json.Unmarshal([]byte(a.Ctx.Request.PostForm["json"][0]), ainfo)
 	if err == nil {

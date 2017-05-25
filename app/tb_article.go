@@ -41,7 +41,7 @@ func init() {
 
 添加一个对象：
 
-curl -X POST -d 'json={"Title":"Sean Plott", "author":"alen", "link":"https://alenstar.github.io/"}' http://127.0.0.1:8080/article
+curl -X POST -H 'Content-Type: application/json' -d 'json={"Title":"Sean Plott", "author":"alen", "link":"https://alenstar.github.io/"}' http://127.0.0.1:8080/article
 
 返回一个相应的ArticleId:{ArticleId}
 

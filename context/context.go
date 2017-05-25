@@ -9,6 +9,7 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"mime"
 	"net/http"
@@ -24,12 +25,13 @@ import (
 type Context struct {
 	Request      *http.Request
 	Params       map[string]string
+	RequestBody  []byte
 	cookieSecret string
 	http.ResponseWriter
 }
 
 func New(w http.ResponseWriter, req *http.Request, secret string) *Context {
-	ctx := &Context{req, map[string]string{}, secret, w}
+	ctx := &Context{req, map[string]string{}, nil, secret, w}
 	req.ParseForm()
 	if len(req.Form) > 0 {
 		for k, v := range req.Form {
@@ -220,4 +222,16 @@ func (ctx *Context) GetSecureCookie(name string) (string, bool) {
 		return string(res), true
 	}
 	return "", false
+}
+func (ctx *Context) CopyBody() []byte {
+	if ctx.Request.Body == nil {
+		return []byte{}
+	}
+	safe := &io.LimitedReader{R: ctx.Request.Body, N: 65535}
+	requestbody, _ := ioutil.ReadAll(safe)
+	ctx.Request.Body.Close()
+	bf := bytes.NewBuffer(requestbody)
+	ctx.Request.Body = ioutil.NopCloser(bf)
+	ctx.RequestBody = requestbody
+	return requestbody
 }
