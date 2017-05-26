@@ -2,13 +2,11 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	_ "github.com/alenstar/nanoweb/config"
 	"github.com/alenstar/nanoweb/controller"
 	"github.com/alenstar/nanoweb/log"
 	"github.com/alenstar/nanoweb/modules"
-	// "github.com/alenstar/nanoweb/utils"
-	//"github.com/bitly/go-simplejson"
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -21,13 +19,13 @@ type ArticleController struct {
 func (a *ArticleController) Get() {
 	if id, ok := a.Ctx.Params["id"]; ok {
 		log.Info("Article ", id)
-		lastid, err := strconv.ParseUint(id, 10, 64)
+		aid, err := strconv.ParseUint(id, 10, 64)
 		if err != nil {
 			log.Error("strconv.ParseUint", err.Error())
-			lastid = 0
+			aid = 0
 		}
-		ainfo := &ArticleInfo{Id: 0, ArticleId: lastid}
-		if lastid != 0 {
+		ainfo := &ArticleInfo{Id: 0, ArticleId: aid}
+		if aid != 0 {
 			has, err := modules.DefaultEngine().Get(ainfo)
 			if err != nil || !has {
 				ainfo.Id = 0
@@ -40,24 +38,26 @@ func (a *ArticleController) Get() {
 					Status:  200,
 					Content: ainfo,
 				}
-				b, _ := json.Marshal(&out)
-				a.Ctx.Write(b)
+				// b, _ := json.Marshal(&out)
+				// a.Ctx.Write(b)
+				a.WriteJSON(&out)
 				return
 			}
 		}
 	} else {
 		var err error
-		lastid := uint64(0)
+		aid := uint64(0) // use aid to page
 		if lid, ok := a.Ctx.Params["lastid"]; ok {
-			lastid, err = strconv.ParseUint(lid, 10, 64)
+			aid, err = strconv.ParseUint(lid, 10, 64)
 			if err != nil {
 				log.Error("strconv.ParseUint", err.Error())
-				lastid = 0
+				aid = 0
 			}
 		}
 
-		ainfo := &ArticleInfo{Id: 0, ArticleId: lastid}
-		if lastid != 0 {
+		// get id by ArticleId
+		ainfo := &ArticleInfo{Id: 0, ArticleId: aid}
+		if aid != 0 {
 			has, err := modules.DefaultEngine().Get(ainfo)
 			if err != nil || !has {
 				ainfo.Id = 0
@@ -129,8 +129,7 @@ func (a *ArticleController) Delete() {
 			a.NotFound()
 			return
 		}
-		ainfo := &ArticleInfo{}
-		ainfo.ArticleId = iid
+		ainfo := &ArticleInfo{ArticleId: iid}
 		_, err = modules.DefaultEngine().Delete(ainfo)
 		if err != nil {
 			log.Error("orm Delete ", err.Error())
@@ -143,5 +142,32 @@ func (a *ArticleController) Delete() {
 }
 
 func (a *ArticleController) Put() {
-	log.Debug("Article Put", a.Ctx.Params["id"], a.Ctx.Request.PostForm["json"][0])
+	log.Debug("Article Put", a.Ctx.Params["id"])
+	if id, ok := a.Ctx.Params["id"]; ok {
+		iid, err := strconv.ParseUint(id, 10, 64)
+		if err != nil {
+			log.Error("strconv.ParseUint", err.Error())
+			a.NotFound()
+			return
+		}
+		ainfo := &ArticleInfo{ArticleId: iid}
+		err = json.Unmarshal(a.Ctx.CopyBody(), ainfo)
+		if err == nil {
+			if len(ainfo.Title) > 0 && len(ainfo.Author) > 0 {
+				ainfo.ArticleId = iid
+				_, err = modules.DefaultEngine().Update(ainfo)
+				if err != nil {
+					log.Error("orm Insert ", err.Error())
+				}
+				a.Ctx.WriteString(fmt.Sprintf(`{"status":200, "content":"%d"}`, ainfo.ArticleId))
+				return
+			} else {
+				log.Debug("Bad ArticleInfo: ", ainfo)
+			}
+		} else {
+			log.Error("json.Unmarshal ", err.Error())
+
+		}
+	}
+	a.Ctx.WriteString(`{"status":404, "info":"xxx"}`)
 }
