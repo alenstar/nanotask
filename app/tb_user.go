@@ -8,13 +8,13 @@ import (
 
 type UserInfo struct {
 	Id       int64     `xorm:"unique index pk autoincr(1001)"`
-	UserId   uint64    `xorm:"notnull unique index autoincr(1001)"`
-	Name     string    `xorm:"notnull unique index varchar(31)"`
-	NickName string    `xorm:"notnull varchar(31)"`
-	Password string    `xorm:"notnull varchar(63)"`
-	Email    string    `xorm:"notnull unique index varchar(63)"`
-	Created  time.Time `xorm:"notnull created"`
-	Updated  time.Time `xorm:"notnull updated"`
+	UserId   uint64    `xorm:"notnull unique index" json:"user_id"`
+	Name     string    `xorm:"notnull unique index varchar(31)" json:"name"`
+	NickName string    `xorm:"notnull varchar(31)" json:"nick_name"`
+	Password string    `xorm:"notnull varchar(63)" json:"password"`
+	Email    string    `xorm:"notnull unique index varchar(63)" json:"email"`
+	Created  time.Time `xorm:"notnull created" json:"created"`
+	Updated  time.Time `xorm:"notnull updated" json:"updated"`
 }
 
 func (u *UserInfo) RealId() uint64 {
@@ -26,7 +26,7 @@ func (u *UserInfo) RealId() uint64 {
 }
 
 func (u *UserInfo) CalcUserId() uint64 {
-	return utils.CRC64([]byte(utils.Md5String(u.Name + u.Email)))
+	return uint64(utils.CRC32([]byte(utils.Md5String(u.Name + u.Email))))
 }
 
 func init() {
@@ -37,7 +37,7 @@ func init() {
 
 添加一个对象：
 
-curl -X POST -H 'Content-Type: application/json' -d '{"Name":"alen","Password":"Sean Plott", "Email":"alen@taobao.com"}' http://127.0.0.1:8080/user
+curl -X POST -H 'Content-Type: application/json' -d '{"name":"alen","password":"Sean Plott", "Email":"alen@taobao.com"}' http://127.0.0.1:8888/user
 
 返回一个相应的Id:{Id}
 

@@ -26,7 +26,7 @@ func (d *DiscussInfo) RealId() uint64 {
 	return (0x0000 << 32) | uint64(d.Id)
 }
 func (d *DiscussInfo) CalcDiscussId() uint64 {
-	return utils.CRC64([]byte(utils.Md5String(fmt.Sprintf("%d@%d on %d", d.UserId, d.ArticleId, time.Now().Unix()))))
+	return uint64(utils.CRC32([]byte(utils.Md5String(fmt.Sprintf("%d@%d on %d", d.UserId, d.ArticleId, time.Now().Unix())))))
 }
 
 func init() {
@@ -37,7 +37,7 @@ func init() {
 
 添加一个对象：
 
-curl -X POST -H 'Content-Type: application/json' -d '{"Name":"alen","Password":"Sean Plott", "Email":"alen@taobao.com"}' http://127.0.0.1:8080/discuss
+curl -X POST -H 'Content-Type: application/json' -d '{"Name":"alen","Password":"Sean Plott", "Email":"alen@taobao.com"}' http://127.0.0.1:8888/discuss
 
 返回一个相应的Id:{Id}
 

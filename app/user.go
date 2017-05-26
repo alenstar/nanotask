@@ -81,7 +81,7 @@ func (u *UserController) Get() {
 			}
 		}
 
-		log.Debug("Article Get ", userIds)
+		log.Debug("User Get ", userIds)
 		out := struct {
 			Status int      `json:"status"`
 			Ids    []uint64 `json:"ids"`

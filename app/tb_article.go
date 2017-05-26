@@ -27,7 +27,7 @@ func (a *ArticleInfo) RealId() uint64 {
 }
 
 func (a *ArticleInfo) CalcArticleId() uint64 {
-	return utils.CRC64([]byte(utils.Md5String(a.Title + a.Author)))
+	return uint64(utils.CRC32([]byte(utils.Md5String(a.Title + a.Author))))
 }
 
 func init() {
@@ -38,7 +38,7 @@ func init() {
 
 添加一个对象：
 
-curl -X POST -H 'Content-Type: application/json' -d '{"title":"Sean Plott", "author":"alen", "link":"https://alenstar.github.io/"}' http://127.0.0.1:8080/article
+curl -X POST -H 'Content-Type: application/json' -d '{"title":"Sean Plott", "author":"alen", "link":"https://alenstar.github.io/"}' http://127.0.0.1:8888/article
 
 返回一个相应的ArticleId:{ArticleId}
 
