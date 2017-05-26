@@ -100,7 +100,7 @@ func (a *ArticleController) Get() {
 func (a *ArticleController) Post() {
 	log.Debug("Article Post", string(a.Ctx.CopyBody()))
 	ainfo := &ArticleInfo{}
-	err := json.Unmarshal([]byte(a.Ctx.Request.PostForm["json"][0]), ainfo)
+	err := json.Unmarshal(a.Ctx.CopyBody(), ainfo)
 	if err == nil {
 		if len(ainfo.Title) > 0 && len(ainfo.Author) > 0 {
 			ainfo.ArticleId = ainfo.CalcArticleId()

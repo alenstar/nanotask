@@ -5,7 +5,7 @@ go:
   - 1.8
   - tip
 
-sudo: true
+sudo: required
 
 install:
   - sudo apt-get install sshpass

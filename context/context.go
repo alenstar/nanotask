@@ -8,6 +8,7 @@ import (
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -30,6 +31,7 @@ type Context struct {
 	http.ResponseWriter
 }
 
+// if cookie secret is set to "", then SetSecureCookie would not work
 func New(w http.ResponseWriter, req *http.Request, secret string) *Context {
 	ctx := &Context{req, map[string]string{}, nil, secret, w}
 	req.ParseForm()
@@ -38,32 +40,10 @@ func New(w http.ResponseWriter, req *http.Request, secret string) *Context {
 			ctx.Params[k] = v[0]
 		}
 	}
+	//ctx.SetHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE", true)
+	ctx.SetHeader("Date", webTime(time.Now().UTC()), true)
 	return ctx
 }
-
-/*
-// if cookie secret is set to "", then SetSecureCookie would not work
-func ContextWithCookieSecret(secret string) martini.Handler {
-	return func(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
-		ctx := &Context{req, map[string]string{}, secret, w}
-		//set some default headers
-		tm := time.Now().UTC()
-
-		//ignore errors from ParseForm because it's usually harmless.
-		req.ParseForm()
-		if len(req.Form) > 0 {
-			for k, v := range req.Form {
-				ctx.Params[k] = v[0]
-			}
-		}
-		ctx.SetHeader("Date", webTime(tm), true)
-		//Set the default content-type
-		ctx.SetHeader("Content-Type", "text/html; charset=utf-8", true)
-		// set martini context for web.Context
-		mc.Map(ctx)
-	}
-}
-*/
 
 // internal utility methods
 func webTime(t time.Time) string {
@@ -77,6 +57,13 @@ func webTime(t time.Time) string {
 // WriteString writes string data into the response object.
 func (ctx *Context) WriteString(content string) {
 	ctx.ResponseWriter.Write([]byte(content))
+}
+
+// WriteJson writes Json data into the response object.
+func (ctx *Context) WriteJSON(content interface{}) {
+	ctx.SetContentType("application/json; charset=utf-8")
+	buf, _ := json.Marshal(content)
+	ctx.ResponseWriter.Write(buf)
 }
 
 // Abort is a helper method that sends an HTTP header and an optional
@@ -121,7 +108,7 @@ func (ctx *Context) Forbidden() {
 // If the supplied value contains a slash (/) it is set as the Content-Type
 // verbatim. The return value is the content type as it was
 // set, or an empty string if none was found.
-func (ctx *Context) ContentType(val string) string {
+func (ctx *Context) SetContentType(val string) string {
 	var ctype string
 	if strings.ContainsRune(val, '/') {
 		ctype = val
@@ -137,19 +124,35 @@ func (ctx *Context) ContentType(val string) string {
 	return ctype
 }
 
+// GetContentType from request
+func (ctx *Context) GetContentType() string {
+	var ctype string
+	for k, v := range ctx.Request.Header {
+		if k == "" {
+			if len(v) > 0 {
+				ctype = v[0]
+			}
+			break
+		}
+	}
+	return ctype
+}
+
 // SetHeader sets a response header. If `unique` is true, the current value
 // of that header will be overwritten . If false, it will be appended.
-func (ctx *Context) SetHeader(hdr string, val string, unique bool) {
+func (ctx *Context) SetHeader(hdr string, val string, unique bool) *Context {
 	if unique {
 		ctx.Header().Set(hdr, val)
 	} else {
 		ctx.Header().Add(hdr, val)
 	}
+	return ctx
 }
 
 // SetCookie adds a cookie header to the response.
-func (ctx *Context) SetCookie(cookie *http.Cookie) {
+func (ctx *Context) SetCookie(cookie *http.Cookie) *Context {
 	ctx.SetHeader("Set-Cookie", cookie.String(), false)
+	return ctx
 }
 
 func getCookieSig(key string, val []byte, timestamp string) string {
@@ -176,10 +179,10 @@ func NewCookie(name string, value string, age int64) *http.Cookie {
 	return &http.Cookie{Name: name, Value: value, Expires: utctime}
 }
 
-func (ctx *Context) SetSecureCookie(name string, val string, age int64) {
+func (ctx *Context) SetSecureCookie(name string, val string, age int64) *Context {
 	//base64 encode the val
 	if len(ctx.cookieSecret) == 0 {
-		return
+		return ctx
 	}
 	var buf bytes.Buffer
 	encoder := base64.NewEncoder(base64.StdEncoding, &buf)
@@ -191,6 +194,7 @@ func (ctx *Context) SetSecureCookie(name string, val string, age int64) {
 	sig := getCookieSig(ctx.cookieSecret, vb, timestamp)
 	cookie := strings.Join([]string{vs, timestamp, sig}, "|")
 	ctx.SetCookie(NewCookie(name, cookie, age))
+	return ctx
 }
 
 func (ctx *Context) GetSecureCookie(name string) (string, bool) {
@@ -223,11 +227,17 @@ func (ctx *Context) GetSecureCookie(name string) (string, bool) {
 	}
 	return "", false
 }
-func (ctx *Context) CopyBody() []byte {
+func (ctx *Context) CopyBody(nsize ...int64) []byte {
+	var nz int64
+	if len(nsize) > 0 {
+		nz = nsize[0]
+	} else {
+		nz = 65535
+	}
 	if ctx.Request.Body == nil {
 		return []byte{}
 	}
-	safe := &io.LimitedReader{R: ctx.Request.Body, N: 65535}
+	safe := &io.LimitedReader{R: ctx.Request.Body, N: nz}
 	requestbody, _ := ioutil.ReadAll(safe)
 	ctx.Request.Body.Close()
 	bf := bytes.NewBuffer(requestbody)
