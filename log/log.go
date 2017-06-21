@@ -2,6 +2,7 @@ package log
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -11,16 +12,37 @@ const defaultCalldepth = 3
 
 var logs []*log.Logger
 
-func init() {
-	defaultOutput := os.Stderr
+var defaultLogger *Logger
 
-	logs = make([]*log.Logger, int(FatalLevel))
-	for i := 0; i < int(FatalLevel); i++ {
-		logs[i] = log.New(defaultOutput, Level(i).Color(), log.Ldate|log.Ltime|log.Lshortfile)
+type Logger struct {
+	color     bool
+	calldepth int
+	logs      []*log.Logger
+}
+
+func init() {
+	if defaultLogger == nil {
+		defaultLogger = New(nil)
 	}
 }
 
-func output(l Level, v ...interface{}) {
+func New(output io.Writer) *Logger {
+	color := false
+	if output == nil {
+		output = os.Stderr
+		color = true
+	}
+	logs = make([]*log.Logger, int(FatalLevel))
+	for i := 0; i < int(FatalLevel); i++ {
+		logs[i] = log.New(output, "", log.Ldate|log.Ltime|log.Lshortfile)
+	}
+	return &Logger{
+		color:     color,
+		calldepth: defaultCalldepth,
+		logs:      logs,
+	}
+}
+func (l *Logger) output(level Level, v ...interface{}) *Logger {
 	var str string
 	for _, s := range v {
 		if strings.HasSuffix(str, " ") || len(str) == 0 {
@@ -29,62 +51,91 @@ func output(l Level, v ...interface{}) {
 			str = str + " " + fmt.Sprint(s)
 		}
 	}
-	logs[l].Output(defaultCalldepth, l.String()+l.Reset()+str)
+	if l.color {
+		l.logs[level].Output(defaultCalldepth, level.ColorString()+str)
+	} else {
+		l.logs[level].Output(defaultCalldepth, level.String()+str)
+	}
+	return l
 }
 
 func Shutdown() {
-	//logs[Trace].Output("shutdown").End()
+	// TODO
+}
+
+func (l *Logger) UseColor() *Logger {
+	l.color = true
+	return l
+}
+
+func (l *Logger) Fatal(v ...interface{}) {
+	l.output(FatalLevel, v...)
+}
+
+func (l *Logger) Panic(v ...interface{}) {
+	l.output(PanicLevel, v...)
+}
+
+func (l *Logger) Trace(v ...interface{}) {
+	l.output(TraceLevel, v...)
+}
+
+func (l *Logger) Debug(v ...interface{}) {
+	l.output(DebugLevel, v...)
+}
+
+func (l *Logger) Info(v ...interface{}) {
+	l.output(InfoLevel, v...)
+}
+
+func (l *Logger) Notice(v ...interface{}) {
+	l.output(NoticeLevel, v...)
+}
+
+func (l *Logger) Warn(v ...interface{}) {
+	l.output(WarnLevel, v...)
+}
+
+func (l *Logger) Error(v ...interface{}) {
+	l.output(ErrorLevel, v...)
+}
+
+func (l *Logger) Alert(v ...interface{}) {
+	l.output(AlertLevel, v...)
 }
 
 func Fatal(v ...interface{}) {
-	output(FatalLevel, v...)
-	//logs[FatalLevel].Output(defaultCalldepth, FatalLevel.String()+FatalLevel.Reset()+fmt.Sprint(v...))
+	defaultLogger.output(FatalLevel, v...)
 }
 
 func Panic(v ...interface{}) {
-	output(PanicLevel, v...)
-	//logs[PanicLevel].Output(defaultCalldepth, PanicLevel.String()+PanicLevel.Reset()+fmt.Sprint(v...))
+	defaultLogger.output(PanicLevel, v...)
 }
 
 func Trace(v ...interface{}) {
-	output(TraceLevel, v...)
-	//logs[TraceLevel].Output(defaultCalldepth, TraceLevel.String()+TraceLevel.Reset()+fmt.Sprint(v...))
+	defaultLogger.output(TraceLevel, v...)
 }
 
 func Debug(v ...interface{}) {
-	output(DebugLevel, v...)
-	//logs[DebugLevel].Output(defaultCalldepth, DebugLevel.String()+DebugLevel.Reset()+fmt.Sprint(v...))
+	defaultLogger.output(DebugLevel, v...)
 }
 
 func Info(v ...interface{}) {
-	// var str string
-	// for _, s := range v {
-	// 	if strings.HasSuffix(str, " ") {
-	// 		str = str + fmt.Sprint(s)
-	// 	} else {
-	// 		str = str + " " + fmt.Sprint(s)
-	// 	}
-	// }
-	// logs[InfoLevel].Output(defaultCalldepth, InfoLevel.String()+InfoLevel.Reset()+str)
-	output(InfoLevel, v...)
+	defaultLogger.output(InfoLevel, v...)
 }
 
 func Notice(v ...interface{}) {
-	output(NoticeLevel, v...)
-	//logs[NoticeLevel].Output(defaultCalldepth, NoticeLevel.String()+NoticeLevel.Reset()+fmt.Sprint(v...))
+	defaultLogger.output(NoticeLevel, v...)
 }
 
 func Warn(v ...interface{}) {
-	output(WarnLevel, v...)
-	//logs[WarnLevel].Output(defaultCalldepth, WarnLevel.String()+WarnLevel.Reset()+fmt.Sprint(v...))
+	defaultLogger.output(WarnLevel, v...)
 }
 
 func Error(v ...interface{}) {
-	output(ErrorLevel, v...)
-	//logs[ErrorLevel].Output(defaultCalldepth, ErrorLevel.String()+ErrorLevel.Reset()+fmt.Sprint(v...))
+	defaultLogger.output(ErrorLevel, v...)
 }
 
 func Alert(v ...interface{}) {
-	output(AlertLevel, v...)
-	//logs[AlertLevel].Output(defaultCalldepth, AlertLevel.String()+AlertLevel.Reset()+fmt.Sprint(v...))
+	defaultLogger.output(AlertLevel, v...)
 }

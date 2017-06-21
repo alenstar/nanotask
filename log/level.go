@@ -83,6 +83,10 @@ func (l Level) Color() string {
 	}
 }
 
+func (l Level) ColorString() string {
+	return l.Color() + l.String() + l.Reset()
+}
+
 func (l Level) Background() string {
 	switch l {
 	case DebugLevel:
