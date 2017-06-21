@@ -26,6 +26,12 @@ func init() {
 	}
 }
 
+func SetDefaultLog(l *Logger) {
+	if l != nil {
+		defaultLogger = l
+	}
+}
+
 func New(output io.Writer) *Logger {
 	color := false
 	if output == nil {
