@@ -5,10 +5,11 @@ import (
 	"time"
 )
 
-func TestFileWriter(t *testing.T) {
-	fw := NewFileWriter("test.log")
+func TestTcpWriter(t *testing.T) {
+	fw := NewTcpWriter("127.0.0.1:8888")
 	l := New(fw)
 
+	// wait sockets connecting
 	time.Sleep(time.Second * 3)
 
 	l.Info("TestLog Info")
