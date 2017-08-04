@@ -298,3 +298,18 @@
 2017/08/04 16:19:14 filewriter_test.go:37: 	[D] Debug 3 2017-08-04 16:19:14.365697955 +0800 CST {hello world 4 false}
 2017/08/04 16:19:14 filewriter_test.go:37: 	[D] Debug 2 2017-08-04 16:19:14.365713366 +0800 CST {hello world 4 false}
 2017/08/04 16:19:14 filewriter_test.go:37: 	[D] Debug 1 2017-08-04 16:19:14.365728431 +0800 CST {hello world 4 false}
+2017/08/04 16:27:29 filewriter_test.go:14: 	[I] TestLog Info
+2017/08/04 16:27:29 filewriter_test.go:16: 	[W] TestLog Warn
+2017/08/04 16:27:29 filewriter_test.go:18: 	[N] TestLog Notice
+2017/08/04 16:27:29 filewriter_test.go:20: 	[E] TestLog Error
+2017/08/04 16:27:29 filewriter_test.go:22: 	[A] TestLog Alert
+2017/08/04 16:27:29 filewriter_test.go:37: 	[D] Debug 10 2017-08-04 16:27:29.30050854 +0800 CST {hello world 4 false}
+2017/08/04 16:27:29 filewriter_test.go:37: 	[D] Debug 9 2017-08-04 16:27:29.300737894 +0800 CST {hello world 4 false}
+2017/08/04 16:27:29 filewriter_test.go:37: 	[D] Debug 8 2017-08-04 16:27:29.300759865 +0800 CST {hello world 4 false}
+2017/08/04 16:27:29 filewriter_test.go:37: 	[D] Debug 7 2017-08-04 16:27:29.300777215 +0800 CST {hello world 4 false}
+2017/08/04 16:27:29 filewriter_test.go:37: 	[D] Debug 6 2017-08-04 16:27:29.300793582 +0800 CST {hello world 4 false}
+2017/08/04 16:27:29 filewriter_test.go:37: 	[D] Debug 5 2017-08-04 16:27:29.300809013 +0800 CST {hello world 4 false}
+2017/08/04 16:27:29 filewriter_test.go:37: 	[D] Debug 4 2017-08-04 16:27:29.300823897 +0800 CST {hello world 4 false}
+2017/08/04 16:27:29 filewriter_test.go:37: 	[D] Debug 3 2017-08-04 16:27:29.300838772 +0800 CST {hello world 4 false}
+2017/08/04 16:27:29 filewriter_test.go:37: 	[D] Debug 2 2017-08-04 16:27:29.300853656 +0800 CST {hello world 4 false}
+2017/08/04 16:27:29 filewriter_test.go:37: 	[D] Debug 1 2017-08-04 16:27:29.300868355 +0800 CST {hello world 4 false}

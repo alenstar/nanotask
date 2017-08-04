@@ -50,10 +50,10 @@ func NewMonGoWriter(urls, dbname, colname string) *MonGoWriter {
 			}
 			vv := struct {
 				Time time.Time
-				Msg  string
+				Msg  []byte
 			}{
 				Time: findTime(v),
-				Msg:  string(v[size-1:]),
+				Msg:  v[size-1:],
 			}
 
 			err = out.c.Insert(vv)
