@@ -4,21 +4,13 @@ go:
   - 1.8
 
 sudo: required
+dist: trusty
 
 install:
   - sudo apt-get install sshpass
-  - go get github.com/zieckey/goini
-  - go get github.com/unrolled/render
-  - go get github.com/go-playground/log
-  - go get github.com/go-playground/ansi
-  - go get gopkg.in/go-playground/assert.v1
-  - go get github.com/bitly/go-simplejson
-  - go get github.com/go-sql-driver/mysql
-  - go get github.com/go-xorm/core
-  - go get github.com/go-xorm/xorm
+  - go get -v ./...
     
 script:
-  - go get -v ./...
   - go test -v ./...
   - go build -v 
   - export DEPLOY_SSH_PASS=$DAOCLOUD_SSH_PASS
