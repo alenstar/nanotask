@@ -26,7 +26,7 @@ func insert(q *Queue, u *UserData) {
 }
 
 func TestQueue(t *testing.T) {
-	cnt := 20
+	cnt := 2
 	fmt.Println("Queue begin ")
 	q := New(callback)
 	go q.Run()

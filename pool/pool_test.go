@@ -18,11 +18,9 @@ func TestCoPool(t *testing.T) {
 		fmt.Println(time.Now(), "\tTest CoPool 1")
 	})
 	cp.Add(func() {
-		time.Sleep(time.Second * 2)
+		time.Sleep(time.Second * 1)
 		fmt.Println(time.Now(), "\tTest CoPool 2")
 	})
-	time.Sleep(time.Second * 5)
+	time.Sleep(time.Second * 2)
 	cp.Shutdown()
-	time.Sleep(time.Second * 1)
-	t.Log("NewCoroutinePool", cp)
 }
