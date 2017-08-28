@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+/*
 func TestMonGoWriter(t *testing.T) {
 	fw := NewMonGoWriter("127.0.0.1:27117, 127.0.0.1:27217, 127.0.0.1:27317", "log", "test")
 	l := New(fw)
@@ -40,3 +41,4 @@ func TestMonGoWriter(t *testing.T) {
 
 	fw.Close()
 }
+*/
