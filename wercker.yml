@@ -25,6 +25,7 @@ build:
     - script:
         name: go get
         code: |
+          go get gopkg.in/go-playground/assert.v1 
           go get -v ./...
   
     # Build the project
@@ -47,6 +48,7 @@ deploy:
     - script:
         name: install sshpass & install dependent
         code: |
+          go get gopkg.in/go-playground/assert.v1 
           go get -v ./...
     - install-packages:
         packages: git ssh-client liberror-perl sshpass
