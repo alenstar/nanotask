@@ -31,12 +31,14 @@ build:
     - script:
         name: go build
         code: |
+          go get -v ./...
           go build -v ./...
 
     # Test the project
     - script:
         name: go test
         code: |
+          go get -v ./...
           go test -v ./...
 
 deploy:
