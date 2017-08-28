@@ -2,8 +2,10 @@ package log
 
 import (
 	"testing"
-	"time"
+	// "time"
 )
+func TestMonGoWriter(t *testing.T) {
+}
 
 /*
 func TestMonGoWriter(t *testing.T) {
