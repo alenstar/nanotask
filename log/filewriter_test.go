@@ -9,7 +9,7 @@ func TestFileWriter(t *testing.T) {
 	fw := NewFileWriter("test.log")
 	l := New(fw)
 
-	time.Sleep(time.Second * 3)
+	time.Sleep(time.Second * 1)
 
 	l.Info("TestLog Info")
 
