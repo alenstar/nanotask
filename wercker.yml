@@ -25,58 +25,40 @@ build:
     - script:
         name: go get
         code: |
-          go get github.com/zieckey/goini
-          go get github.com/unrolled/render
-          go get github.com/go-playground/log
-          go get github.com/go-playground/ansi
-          go get gopkg.in/go-playground/assert.v1
-          go get github.com/bitly/go-simplejson
-          go get github.com/go-sql-driver/mysql
-          go get github.com/go-xorm/core
-          go get github.com/go-xorm/xorm
+          go get -v ./...
   
     # Build the project
     - script:
         name: go build
         code: |
-          go get -v ./...
           go build -v ./...
 
     # Test the project
     - script:
         name: go test
         code: |
-          go get -v ./...
           go test -v ./...
 
 deploy:
   steps:
     - setup-go-workspace
     - script:
-        name: install sshpass
+        name: install sshpass & install dependent
         code: |
-          go get github.com/zieckey/goini
-          go get github.com/unrolled/render
-          go get github.com/go-playground/log
-          go get github.com/go-playground/ansi
-          go get gopkg.in/go-playground/assert.v1
-          go get github.com/bitly/go-simplejson
-          go get github.com/go-sql-driver/mysql
-          go get github.com/go-xorm/core
-          go get github.com/go-xorm/xorm
+          go get -v ./...
     - install-packages:
         packages: git ssh-client liberror-perl sshpass
     - script:
         name: deploy to daocloud
         code: |
+          go get -v ./...
           go build -v
-          #export DEPLOY_SSH_PASS=$DAOCLOUD_SSH_PASS
-          #export DEPLOY_SSH_URL=$DAOCLOUD_SSH_URL
-          #chmod a+x ./deploy.sh
-          #./deploy.sh
-          sshpass -p $DAOCLOUD_SSH_PASS ssh -o StrictHostKeyChecking=no $DAOCLOUD_SSH_URL "[ -f nanoweb ] && rm nanoweb "
-          sshpass -p $DAOCLOUD_SSH_PASS scp -o stricthostkeychecking=no nanoweb ${DAOCLOUD_SSH_URL}:/home/ubuntu
-          #sshpass -p $DAOCLOUD_SSH_PASS ssh -o StrictHostKeyChecking=no $DAOCLOUD_SSH_URL "NANOWEB_STATUS=`ps -A | grep nanoweb | wc -l` && [ $NANOWEB_STATUS -eq 1 ] && killall nanoweb && nohup ./nanoweb&"
-          sshpass -p $DAOCLOUD_SSH_PASS ssh -o StrictHostKeyChecking=no $DAOCLOUD_SSH_URL "killall nanoweb ; chmod a+x nanoweb ; nohup ./nanoweb&"
+          ##export DEPLOY_SSH_PASS=$DAOCLOUD_SSH_PASS
+          ##export DEPLOY_SSH_URL=$DAOCLOUD_SSH_URL
+          ##chmod a+x ./deploy.sh
+          ##./deploy.sh
+          #sshpass -p $DAOCLOUD_SSH_PASS ssh -o StrictHostKeyChecking=no $DAOCLOUD_SSH_URL "[ -f nanoweb ] && rm nanoweb "
+          #sshpass -p $DAOCLOUD_SSH_PASS scp -o stricthostkeychecking=no nanoweb ${DAOCLOUD_SSH_URL}:/home/ubuntu
+          #sshpass -p $DAOCLOUD_SSH_PASS ssh -o StrictHostKeyChecking=no $DAOCLOUD_SSH_URL "killall nanoweb ; chmod a+x nanoweb ; nohup ./nanoweb&"
 
 
