@@ -32,6 +32,7 @@ func TestLog(t *testing.T) {
 	Shutdown()
 }
 
+/*
 func TestFileWriter(t *testing.T) {
 	fw := NewFileWriter("test.log")
 	l := New(fw)
@@ -64,7 +65,6 @@ func TestFileWriter(t *testing.T) {
 	fw.Close()
 }
 
-/*
 func TestTcpWriter(t *testing.T) {
 	fw := NewTcpWriter("127.0.0.1:8888")
 	l := New(fw)
