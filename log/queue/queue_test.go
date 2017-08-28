@@ -22,11 +22,7 @@ func callback(val interface{}) {
 }
 
 func insert(q *Queue, u *UserData) {
-	cnt := 20000
-	for cnt > 0 {
-		q.Put(u)
-		cnt = cnt - 1
-	}
+	q.Put(u)
 }
 
 func TestQueue(t *testing.T) {
