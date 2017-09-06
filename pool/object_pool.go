@@ -2,37 +2,73 @@ package pool
 
 import (
 	"sync"
+	"reflect"
+	"errors"
 )
-
-type item struct {
-
-}
 
 type ObjectPool struct {
 	sync.Mutex
-	notify   chan struct{}
-	objs 	map[interface{}]bool
-	running  bool
+	typItems map[string]reflect.Type
+	objItems map[reflect.Type]map[interface{}]bool
 }
 
 func NewObjectPool() *ObjectPool {
 	return &ObjectPool{
-		notify:   make(chan struct{}),
-		objs: make(map[interface{}]bool),
-		running:false,
+		typItems: make(map[string]reflect.Type),
+		objItems: make(map[reflect.Type]map[interface{}]bool),
 	}
 }
 
-func (o *ObjectPool) Release(obj interface{}){
+func (o *ObjectPool) RegisterType(name string, obj interface{}) error {
+	typ := reflect.Indirect(reflect.ValueOf(obj)).Type()
 	o.Lock()
-	if used, ok:= o.objs[obj]; ok {
+	defer o.Unlock()
+	if t, ok := o.typItems[name]; ok {
+		if t == typ {
+			// was registered
+			return nil
+		}
+		return errors.New(" the type name was registered")
+	}
+
+	o.typItems[name] = typ
+	o.objItems[typ] = make(map[interface{}]bool)
+	return nil
+}
+
+func (o *ObjectPool) Release(obj interface{}) {
+	typ := reflect.Indirect(reflect.ValueOf(obj)).Type()
+	o.Lock()
+	defer o.Unlock()
+	if used, ok := o.objItems[typ][obj]; ok {
 		if used {
-			o.objs[used] = false
+			o.objItems[typ][obj] = false
+		} else {
+			// the object not in this pool
+			// FIXME
+		}
+		return
+	}
+	// not register type
+	// TODO
+}
+
+func (o *ObjectPool) Obtain(name string) (interface{}, error) {
+	if _, ok := o.typItems[name]; ok == false {
+		return nil, errors.New(" the type was not registered")
+	}
+	typ := o.typItems[name]
+	for value, used := range o.objItems[typ] {
+		if used == false {
+			o.objItems[typ][value] = true
+			return value, nil
 		}
 	}
-}
 
-func (o *ObjectPool) Obtain() interface{} {
+	// not found free object
+	// new object and return
 
-
+	value := reflect.New(typ).Interface()
+	o.objItems[typ][value] = true
+	return value, nil
 }

@@ -11,12 +11,12 @@ type Runner interface {
 
 var (
 	defaultObjectPools    []*ObjectPool
-	defaultCoroutinePools []*CoroutinePool
+	defaultCoroutinePools []*RoutinePool
 )
 
 func init() {
 	defaultObjectPools = make([]*ObjectPool, runtime.NumCPU()*4)
-	defaultCoroutinePools = make([]*CoroutinePool, runtime.NumCPU()*4)
+	defaultCoroutinePools = make([]*RoutinePool, runtime.NumCPU()*4)
 }
 
 func Start() {

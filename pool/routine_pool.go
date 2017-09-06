@@ -89,7 +89,7 @@ func NewWorker(num uint) *Worker {
 	}
 }
 
-type CoroutinePool struct {
+type RoutinePool struct {
 	cur     uint
 	maxsize uint
 	exit    chan struct{}
@@ -100,12 +100,12 @@ type CoroutinePool struct {
 	//routines []*Worker //*list.List
 }
 
-func NewCoroutinePool(num uint) *CoroutinePool {
+func NewRoutinePool(num uint) *RoutinePool {
 	groups := make([]*Worker, runtime.NumCPU()*4)
 	for i := 0; i < len(groups); i++ {
 		groups[i] = NewWorker(num)
 	}
-	return &CoroutinePool{
+	return &RoutinePool{
 		cur:     0,
 		maxsize: num,
 		exit:    make(chan struct{}),
@@ -115,7 +115,7 @@ func NewCoroutinePool(num uint) *CoroutinePool {
 	}
 }
 
-func (c *CoroutinePool) Run() {
+func (c *RoutinePool) Run() {
 	for {
 		select {
 		case <-c.exit:
@@ -126,7 +126,7 @@ func (c *CoroutinePool) Run() {
 	c.wg.Wait()
 }
 
-func (c *CoroutinePool) Shutdown() {
+func (c *RoutinePool) Shutdown() {
 	for _, g := range c.groups {
 		for _, v := range g.routines {
 			if v.running() {
@@ -139,7 +139,7 @@ func (c *CoroutinePool) Shutdown() {
 	//sc.exit <- e
 }
 
-func (c *CoroutinePool) Add(f func()) error {
+func (c *RoutinePool) Add(f func()) error {
 	if f != nil {
 		c := c.findcoroutine()
 		if c != nil {
@@ -155,7 +155,7 @@ func (c *CoroutinePool) Add(f func()) error {
 	return nil
 }
 
-func (c *CoroutinePool) findcoroutine() *coroutine {
+func (c *RoutinePool) findcoroutine() *coroutine {
 	for _, g := range c.groups {
 		for _, v := range g.routines {
 			if v.empty() {
@@ -166,7 +166,7 @@ func (c *CoroutinePool) findcoroutine() *coroutine {
 	return nil
 }
 
-// func (g *Coroutine) full() bool {
+// func (g *RoutinePool) full() bool {
 // 	for v := range g.routines {
 // 		if v.runner == nil {
 // 			return false
@@ -175,6 +175,6 @@ func (c *CoroutinePool) findcoroutine() *coroutine {
 // 	return true
 // }
 
-// func (g *Coroutine) empty() bool {
+// func (g *RoutinePool) empty() bool {
 // 	return false
 // }
