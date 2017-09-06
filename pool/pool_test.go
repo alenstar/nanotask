@@ -1,25 +1,40 @@
 package pool
 
 import (
-	"gopkg.in/go-playground/assert.v1"
 	"fmt"
+	"gopkg.in/go-playground/assert.v1"
 	"testing"
 	"time"
 )
+
+type Time struct {
+	Name string
+}
 
 func TestObjectPool(t *testing.T) {
 
 	o := NewObjectPool()
 	now := time.Now()
+	o.RegisterType("time2", (*Time)(nil))
 	o.RegisterType("time", &now)
 	tm, err := o.Obtain("time")
 	assert.NotEqual(t, *tm.(*time.Time), now)
-	t.Log("Object:",tm.(*time.Time),  err)
+	t.Log("Object:", tm.(*time.Time), err)
 	*tm.(*time.Time) = now
 	o.Release(tm)
 	tm, err = o.Obtain("time")
 	assert.Equal(t, *tm.(*time.Time), now)
-	t.Log("Object:",tm.(*time.Time),  err)
+	t.Log("Object:", tm.(*time.Time), err)
+
+	tm2, err := o.Obtain("time2")
+	assert.Equal(t, err, nil)
+	assert.Equal(t, tm2.(*Time).Name, "")
+
+	tm2.(*Time).Name = "time2"
+	o.Release(tm2)
+	tm2, err = o.Obtain("time2")
+	assert.Equal(t, err, nil)
+	assert.Equal(t, tm2.(*Time).Name, "time2")
 }
 
 func TestRoutinePool(t *testing.T) {
@@ -35,4 +50,3 @@ func TestRoutinePool(t *testing.T) {
 	time.Sleep(time.Second * 2)
 	cp.Shutdown()
 }
-

@@ -1,9 +1,9 @@
 package pool
 
 import (
-	"sync"
-	"reflect"
 	"errors"
+	"reflect"
+	"sync"
 )
 
 type ObjectPool struct {
@@ -20,7 +20,8 @@ func NewObjectPool() *ObjectPool {
 }
 
 func (o *ObjectPool) RegisterType(name string, obj interface{}) error {
-	typ := reflect.Indirect(reflect.ValueOf(obj)).Type()
+	// typ := reflect.Indirect(reflect.ValueOf(obj)).Type()
+	typ := reflect.TypeOf(obj).Elem()
 	o.Lock()
 	defer o.Unlock()
 	if t, ok := o.typItems[name]; ok {
@@ -37,7 +38,8 @@ func (o *ObjectPool) RegisterType(name string, obj interface{}) error {
 }
 
 func (o *ObjectPool) Release(obj interface{}) {
-	typ := reflect.Indirect(reflect.ValueOf(obj)).Type()
+	// typ := reflect.Indirect(reflect.ValueOf(obj)).Type()
+	typ := reflect.TypeOf(obj).Elem()
 	o.Lock()
 	defer o.Unlock()
 	if used, ok := o.objItems[typ][obj]; ok {
