@@ -1,111 +1,100 @@
 package log
 
 // AllLevels is an array of all log levels, for easier registering of all levels to a handler
-var AllLevels = []Level{
-	DebugLevel,
-	TraceLevel,
-	InfoLevel,
-	NoticeLevel,
-	WarnLevel,
-	ErrorLevel,
-	PanicLevel,
-	AlertLevel,
-	FatalLevel,
-}
 
 // Level of the log
-type Level uint8
+type LogLevel uint8
 
 // Log levels.
 const (
-	DebugLevel Level = iota
-	TraceLevel
-	InfoLevel
-	NoticeLevel
-	WarnLevel
-	ErrorLevel
-	PanicLevel
-	AlertLevel
-	FatalLevel // same as syslog CRITICAL
+	DEBUG LogLevel = iota
+	TRACE
+	INFO
+	NOTICE
+	WARN
+	ALERT
+	ERROR
+	FATAL // same as syslog CRITICAL
+	PANIC
 )
 
-func (l Level) String() string {
+func (l LogLevel) String() string {
 	switch l {
-	case DebugLevel:
+	case DEBUG:
 		return "\t[D] " // debug
-	case TraceLevel:
+	case TRACE:
 		return "\t[T] " // trace
-	case InfoLevel:
+	case INFO:
 		return "\t[I] " // info
-	case NoticeLevel:
+	case NOTICE:
 		return "\t[N] " // notice
-	case WarnLevel:
+	case WARN:
 		return "\t[W] " // warn
-	case ErrorLevel:
-		return "\t[E] " // error
-	case PanicLevel:
-		return "\t[P] " // panic
-	case AlertLevel:
+	case ALERT:
 		return "\t[A] " // alert
-	case FatalLevel:
+	case ERROR:
+		return "\t[E] " // error
+	case FATAL:
 		return "\t[F] " // fatal
+	case PANIC:
+		return "\t[P] " // panic
 	default:
 		return "Unknow Level "
 	}
 }
 
-func (l Level) Reset() string {
+func (l LogLevel) Reset() string {
 	return string(Reset)
 }
 
-func (l Level) Color() string {
+func (l LogLevel) Color() string {
 	switch l {
-	case DebugLevel:
+	case DEBUG:
 		return string(LightBlue) // debug
-	case TraceLevel:
+	case TRACE:
 		return string(Black) // trace
-	case InfoLevel:
+	case INFO:
 		return string(Green) // info
-	case NoticeLevel:
+	case NOTICE:
 		return string(Cyan) // notice
-	case WarnLevel:
+	case WARN:
 		return string(LightYellow) // warn
-	case ErrorLevel:
+	case ERROR:
 		return string(LightRed) // error
-	case PanicLevel:
+	case PANIC:
 		return string(White) // panic
-	case AlertLevel:
+	case ALERT:
 		return string(Yellow) // alert
-	case FatalLevel:
+	case FATAL:
 		return string(Gray) // fatal
 	default:
 		return ""
 	}
 }
 
-func (l Level) ColorString() string {
+func (l LogLevel) ColorString() string {
 	return l.Color() + l.String() + l.Reset()
 }
 
-func (l Level) Background() string {
+func (l LogLevel) Background() string {
 	switch l {
-	case DebugLevel:
+	case DEBUG:
 		return "" // debug
-	case TraceLevel:
+	case TRACE:
 		return "" // trace
-	case InfoLevel:
+	case INFO:
 		return "" // info
-	case NoticeLevel:
+	case NOTICE:
 		return "" // notice
-	case WarnLevel:
+	case WARN:
 		return "" // warn
-	case ErrorLevel:
+	case ERROR:
 		return "" // error
-	case PanicLevel:
+	case PANIC:
 		return "" // panic
-	case AlertLevel:
+	case ALERT:
 		return "" // alert
-	case FatalLevel:
+	case FATAL:
 		return "" // fatal
 	default:
 		return ""
