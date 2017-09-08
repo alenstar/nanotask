@@ -4,6 +4,7 @@ import (
 	"errors"
 	"reflect"
 	"sync"
+	"fmt"
 )
 
 type ObjectPool struct {
@@ -19,9 +20,10 @@ func NewObjectPool() *ObjectPool {
 	}
 }
 
-func (o *ObjectPool) RegisterType(name string, obj interface{}) error {
+func (o *ObjectPool) RegisterType(obj interface{}) error {
 	// typ := reflect.Indirect(reflect.ValueOf(obj)).Type()
 	typ := reflect.TypeOf(obj).Elem()
+	name := fmt.Sprintf("%s.%s", typ.PkgPath(), typ.Name())
 	o.Lock()
 	defer o.Unlock()
 	if t, ok := o.typItems[name]; ok {
@@ -70,7 +72,12 @@ func (o *ObjectPool) Obtain(name string) (interface{}, error) {
 	// not found free object
 	// new object and return
 
+	// object
+	// reflect.New(typ).Elem().Interface()
+
+	// object pointer
 	value := reflect.New(typ).Interface()
+
 	o.objItems[typ][value] = true
 	return value, nil
 }
