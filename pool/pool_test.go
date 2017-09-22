@@ -15,8 +15,8 @@ func TestObjectPool(t *testing.T) {
 
 	o := NewObjectPool()
 	now := time.Now()
-	o.RegisterType((*Time)(nil))
-	o.RegisterType(&now)
+	o.RegisterType("pool.Time", (*Time)(nil))
+	o.RegisterType("time.Time", &now)
 	tm, err := o.Obtain("time.Time")
 	assert.NotEqual(t, *tm.(*time.Time), now)
 	t.Log("Object:", tm.(*time.Time), err)
@@ -26,13 +26,13 @@ func TestObjectPool(t *testing.T) {
 	assert.Equal(t, *tm.(*time.Time), now)
 	t.Log("Object:", tm.(*time.Time), err)
 
-	tm2, err := o.Obtain("github.com/alenstar/nanotask/pool.Time")
+	tm2, err := o.Obtain("pool.Time")
 	assert.Equal(t, err, nil)
 	assert.Equal(t, tm2.(*Time).Name, "")
 
 	tm2.(*Time).Name = "time2"
 	o.Release(tm2)
-	tm2, err = o.Obtain("github.com/alenstar/nanotask/pool.Time")
+	tm2, err = o.Obtain("pool.Time")
 	assert.Equal(t, err, nil)
 	assert.Equal(t, tm2.(*Time).Name, "time2")
 }

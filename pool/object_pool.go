@@ -2,9 +2,9 @@ package pool
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 	"sync"
-	"fmt"
 )
 
 type ObjectPool struct {
@@ -20,10 +20,10 @@ func NewObjectPool() *ObjectPool {
 	}
 }
 
-func (o *ObjectPool) RegisterType(obj interface{}) error {
+func (o *ObjectPool) RegisterType(name string, obj interface{}) error {
 	// typ := reflect.Indirect(reflect.ValueOf(obj)).Type()
 	typ := reflect.TypeOf(obj).Elem()
-	name := fmt.Sprintf("%s.%s", typ.PkgPath(), typ.Name())
+	// name := fmt.Sprintf("%s.%s", typ.PkgPath(), typ.Name())
 	o.Lock()
 	defer o.Unlock()
 	if t, ok := o.typItems[name]; ok {
