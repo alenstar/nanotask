@@ -1,13 +1,9 @@
 package pool
 
 import (
-	//"container/list"
 	"errors"
-	//"fmt"
-	//"github.com/alenstar/nanoweb/log"
 	"runtime"
 	"sync"
-	//"time"
 )
 
 type coroutine struct {

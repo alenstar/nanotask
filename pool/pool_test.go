@@ -2,7 +2,7 @@ package pool
 
 import (
 	"fmt"
-	"gopkg.in/go-playground/assert.v1"
+	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
 )
@@ -26,13 +26,13 @@ func TestObjectPool(t *testing.T) {
 	assert.Equal(t, *tm.(*time.Time), now)
 	t.Log("Object:", tm.(*time.Time), err)
 
-	tm2, err := o.Obtain("github.com/alenstar/nanoweb/pool.Time")
+	tm2, err := o.Obtain("github.com/alenstar/nanotask/pool.Time")
 	assert.Equal(t, err, nil)
 	assert.Equal(t, tm2.(*Time).Name, "")
 
 	tm2.(*Time).Name = "time2"
 	o.Release(tm2)
-	tm2, err = o.Obtain("github.com/alenstar/nanoweb/pool.Time")
+	tm2, err = o.Obtain("github.com/alenstar/nanotask/pool.Time")
 	assert.Equal(t, err, nil)
 	assert.Equal(t, tm2.(*Time).Name, "time2")
 }

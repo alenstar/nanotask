@@ -6,11 +6,10 @@ import (
 	"io/ioutil"
 	"os"
 	"reflect"
-	// "encoding/base64"
 	"encoding/hex"
 )
 
-func reflectCopy(dst, src reflect.Value) error {
+func ReflectCopy(dst, src reflect.Value) error {
 	if dst.CanSet() && dst.Kind() == src.Kind() {
 		dst.Set(src)
 	} else {
@@ -19,7 +18,7 @@ func reflectCopy(dst, src reflect.Value) error {
 	return nil
 }
 
-func findField(face interface{}, name string) (reflect.Value, error) {
+func FindField(face interface{}, name string) (reflect.Value, error) {
 	val := reflect.ValueOf(face).Elem()
 	if val.Kind() != reflect.Struct {
 		return val, errors.New("not support")

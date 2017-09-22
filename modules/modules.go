@@ -2,8 +2,8 @@ package modules
 
 import (
 	"fmt"
-	"github.com/alenstar/nanoweb/config"
-	"github.com/alenstar/nanoweb/log"
+	"github.com/alenstar/nanotask/config"
+	"github.com/alenstar/nanotask/log"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/core"
 	"github.com/go-xorm/xorm"

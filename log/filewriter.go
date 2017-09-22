@@ -2,7 +2,7 @@ package log
 
 import (
 	"fmt"
-	"github.com/alenstar/nanoweb/log/queue"
+	"github.com/alenstar/nanotask/log/queue"
 	"os"
 	"path"
 )

@@ -3,7 +3,7 @@ package http
 import (
 	"errors"
 	_ "fmt"
-	"github.com/alenstar/nanoweb/log"
+	"github.com/alenstar/nanotask/log"
 	"io/ioutil"
 	_http "net/http"
 	_url "net/url"

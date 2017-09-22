@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/alenstar/nanoweb/controller"
+	"github.com/alenstar/nanotask/controller"
 	"net/http"
 )
 
