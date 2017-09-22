@@ -1,8 +1,8 @@
-package app
+package main
 
 import (
-	"github.com/alenstar/nanoweb/modules"
-	"github.com/alenstar/nanoweb/utils"
+	"github.com/alenstar/nanotask/modules"
+	"github.com/alenstar/nanotask/utils"
 	"time"
 )
 
