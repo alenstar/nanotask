@@ -2,11 +2,11 @@ package modules
 
 import (
 	"fmt"
-	"github.com/alenstar/nanotask/config"
-	"github.com/alenstar/nanotask/log"
+	"goworker/config"
+	"goworker/log"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/go-xorm/core"
-	"github.com/go-xorm/xorm"
+	// "xorm.io/xorm/core"
+	"xorm.io/xorm"
 )
 
 type XormLogger struct {
@@ -36,10 +36,9 @@ func init() {
 	if err != nil {
 		log.Error("xorm.NewEngine: ", err.Error())
 	} else {
-		engine.SetLogger(xorm.NewSimpleLogger(new(XormLogger)))
+		// engine.SetLogger(xorm.NewSimpleLogger(new(XormLogger)))
 		engine.ShowSQL(true)
-		engine.SetTableMapper(core.NewPrefixMapper(core.SnakeMapper{}, "tb_"))
-
+		// engine.SetTableMapper(core.NewPrefixMapper(core.SnakeMapper{}, "tb_"))
 		log.Info(engine.DBMetas())
 	}
 }

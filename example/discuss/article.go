@@ -3,10 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	_ "github.com/alenstar/nanotask/config"
-	"github.com/alenstar/nanotask/controller"
-	"github.com/alenstar/nanotask/log"
-	"github.com/alenstar/nanotask/modules"
+	_ "goworker/config"
+	"goworker/controller"
+	"goworker/log"
+	"goworker/modules"
 	"strconv"
 	"strings"
 )

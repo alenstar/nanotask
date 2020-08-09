@@ -2,8 +2,8 @@ package log
 
 import (
 	"fmt"
-	"github.com/alenstar/nanotask/log/queue"
-	"github.com/alenstar/nanotask/sockets"
+	"goworker/log/queue"
+	"goworker/sockets"
 	"time"
 )
 

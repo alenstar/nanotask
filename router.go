@@ -1,2 +1,2 @@
-package nano
+package goworker
 

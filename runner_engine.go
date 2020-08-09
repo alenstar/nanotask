@@ -1,4 +1,4 @@
-package nano
+package goworker
 
 
 type Engine interface{

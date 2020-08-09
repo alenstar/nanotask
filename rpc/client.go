@@ -2,7 +2,7 @@ package rpc
 
 import (
 	"encoding/json"
-	"github.com/alenstar/nanotask/log"
+	"goworker/log"
 	"reflect"
 	"fmt"
 )

@@ -1,11 +1,11 @@
 package main
 
 import (
-	_ "github.com/alenstar/nanotask/config"
-	"github.com/alenstar/nanotask/controller"
-	"github.com/alenstar/nanotask/http/server"
-	"github.com/alenstar/nanotask/log"
-	_ "github.com/alenstar/nanotask/modules"
+	_ "goworker/config"
+	"goworker/controller"
+	"goworker/http/server"
+	"goworker/log"
+	_ "goworker/modules"
 )
 
 type MyController struct {

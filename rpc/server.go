@@ -3,7 +3,7 @@ package rpc
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/alenstar/nanotask/log"
+	"goworker/log"
 )
 
 type Server struct {

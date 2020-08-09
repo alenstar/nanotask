@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/alenstar/nanotask/modules"
-	"github.com/alenstar/nanotask/utils"
+	"goworker/modules"
+	"goworker/utils"
 	"time"
 )
 

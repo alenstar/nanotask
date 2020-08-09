@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/alenstar/nanotask/log"
+	"goworker/log"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
@@ -79,7 +79,7 @@ type ClientEcho struct {
 }
 
 func (c *ClientEcho) Echo(body []byte) ([]byte, error) {
-	resp, err := http.Post("http://127.0.0.1:8888/rpc", "application/json", bytes.NewReader(body))
+	resp, err := http.Post("http://127.0.0.1:18888/rpc", "application/json", bytes.NewReader(body))
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +107,7 @@ func httpserver(t *testing.T) *http.Server {
 	})
 
 	srv := &http.Server{
-		Addr:    ":8888",
+		Addr:    ":18888",
 		Handler: router,
 	}
 	go func() {

@@ -2,7 +2,7 @@ package log
 
 import (
 	"fmt"
-	"github.com/alenstar/nanotask/log/queue"
+	"goworker/log/queue"
 	"os"
 	"path"
 )

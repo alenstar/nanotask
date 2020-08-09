@@ -148,11 +148,11 @@ func Alert(v ...interface{}) {
 
 // output to stdout
 func Printf(format string, v... interface{}){
-	fmt.Printf(format, v)
+	fmt.Printf(format, v...)
 }
 func Println(v ...interface{}){
-	fmt.Println(v)
+	fmt.Println(v...)
 }
 func Print(v ...interface{}) {
-	fmt.Print(v)
+	fmt.Print(v...)
 }

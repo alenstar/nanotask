@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/alenstar/nanotask/controller"
+	"goworker/controller"
 	"net/http"
 )
 
